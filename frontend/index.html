@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Training Manager</h1>
+        <p class="subtitulo">
+    Sistema de Gestão de Treinamentos Corporativos
+</p>
+        <nav class="menu">
+<a class="ativo" href="index.html">Colaboradores</a>
+    <a href="treinamentos.html">Treinamentos</a>
+</nav>
+
+        <h2>Cadastro de Colaboradores</h2>
+
+        <form id="formColaborador">
+
+            <input type="text" id="nome" placeholder="Nome" required>
+
+            <input type="text" id="matricula" placeholder="Matrícula" required>
+
+            <input type="email" id="email" placeholder="E-mail">
+
+            <input type="text" id="cargo" placeholder="Cargo">
+
+            <input type="text" id="loja" placeholder="Loja">
+
+            <button type="submit">Cadastrar Colaborador</button>
+
+        </form>
+
+        <p id="mensagem"></p>
+
+        <h2>Colaboradores Cadastrados</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                    <th>E-mail</th>
+                    <th>Cargo</th>
+                    <th>Loja</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="listaColaboradores">
+            </tbody>
+        </table>
+
+    </div>
+
+    <script src="colaboradores.js"></script>
+
+</body>
+</html>

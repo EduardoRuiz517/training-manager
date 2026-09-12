@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamentos - Training Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Training Manager</h1>
+    <p class="subtitulo">
+    Sistema de Gestão de Treinamentos Corporativos
+</p>
+    <nav class="menu">
+<nav class="menu">
+    <a href="index.html">Colaboradores</a>
+    <a class="ativo" href="treinamentos.html">Treinamentos</a>
+</nav>
+</nav>
+
+    <h2>Cadastro de Treinamentos</h2>
+
+    <form id="formTreinamento">
+
+        <input
+            type="text"
+            id="nome"
+            placeholder="Nome do treinamento"
+            required
+        >
+
+        <input
+            type="text"
+            id="descricao"
+            placeholder="Descrição"
+        >
+
+        <input
+            type="number"
+            id="carga_horaria"
+            placeholder="Carga horária"
+        >
+
+        <select id="tipo">
+            <option value="Obrigatório">Obrigatório</option>
+            <option value="Complementar">Complementar</option>
+        </select>
+
+        <button type="submit">
+            Cadastrar Treinamento
+        </button>
+
+    </form>
+
+    <p id="mensagem"></p>
+
+    <h2>Treinamentos Cadastrados</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Treinamento</th>
+                <th>Descrição</th>
+                <th>Carga Horária</th>
+                <th>Tipo</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="listaTreinamentos">
+        </tbody>
+
+    </table>
+
+</div>
+
+<script src="treinamentos.js"></script>
+
+</body>
+</html>
