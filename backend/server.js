@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const connection = require('./database/connection');
+
 const colaboradoresRoutes = require('./routes/colaboradores');
 const treinamentosRoutes = require('./routes/treinamentos');
+const turmasRoutes = require('./routes/turmas');
+const matriculasRoutes = require('./routes/matriculas');
 
 const app = express();
 
@@ -11,6 +14,8 @@ app.use(express.json());
 
 app.use('/colaboradores', colaboradoresRoutes);
 app.use('/treinamentos', treinamentosRoutes);
+app.use('/turmas', turmasRoutes);
+app.use('/matriculas', matriculasRoutes);
 
 app.get('/', (req, res) => {
     res.send('Training Manager API funcionando!');
