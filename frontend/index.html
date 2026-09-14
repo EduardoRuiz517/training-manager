@@ -11,13 +11,16 @@
     <div class="container">
 
         <h1>Training Manager</h1>
+
         <p class="subtitulo">
-    Sistema de Gestão de Treinamentos Corporativos
-</p>
+            Sistema de Gestão de Treinamentos Corporativos
+        </p>
+
         <nav class="menu">
-<a class="ativo" href="index.html">Colaboradores</a>
-    <a href="treinamentos.html">Treinamentos</a>
-</nav>
+            <a class="ativo" href="index.html">Colaboradores</a>
+            <a href="treinamentos.html">Treinamentos</a>
+            <a href="turmas.html">Turmas</a>
+        </nav>
 
         <h2>Cadastro de Colaboradores</h2>
 
@@ -33,15 +36,69 @@
 
             <input type="text" id="loja" placeholder="Loja">
 
-            <button type="submit">Cadastrar Colaborador</button>
+            <button type="submit">
+                Cadastrar Colaborador
+            </button>
 
         </form>
 
         <p id="mensagem"></p>
 
+        <h2>Importação em Lote</h2>
+
+        <div class="importacao-box">
+
+            <p>
+                Selecione um arquivo CSV com os colaboradores.
+            </p>
+
+            <p>
+                Cabeçalho esperado:
+                <strong>nome, matricula, email, cargo, loja</strong>
+            </p>
+
+            <form id="formImportacao">
+
+                <input
+                    type="file"
+                    id="arquivoCSV"
+                    accept=".csv"
+                    required
+                >
+
+                <button type="submit">
+                    Importar Colaboradores
+                </button>
+
+            </form>
+
+            <p id="mensagemImportacao"></p>
+
+            <div id="resultadoImportacao" style="display: none;">
+
+                <p>
+                    Total:
+                    <strong id="totalImportacao">0</strong>
+                </p>
+
+                <p>
+                    Importados:
+                    <strong id="totalImportados">0</strong>
+                </p>
+
+                <p>
+                    Ignorados:
+                    <strong id="totalIgnorados">0</strong>
+                </p>
+
+            </div>
+
+        </div>
+
         <h2>Colaboradores Cadastrados</h2>
 
         <table>
+
             <thead>
                 <tr>
                     <th>ID</th>
@@ -56,6 +113,7 @@
 
             <tbody id="listaColaboradores">
             </tbody>
+
         </table>
 
     </div>

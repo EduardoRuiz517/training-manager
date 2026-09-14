@@ -4,6 +4,17 @@ const form = document.getElementById('formColaborador');
 const mensagem = document.getElementById('mensagem');
 const lista = document.getElementById('listaColaboradores');
 
+const formImportacao = document.getElementById('formImportacao');
+const arquivoCSV = document.getElementById('arquivoCSV');
+const mensagemImportacao = document.getElementById('mensagemImportacao');
+
+const resultadoImportacao = document.getElementById('resultadoImportacao');
+const totalImportacao = document.getElementById('totalImportacao');
+const totalImportados = document.getElementById('totalImportados');
+const totalIgnorados = document.getElementById('totalIgnorados');
+
+
+// CARREGAR COLABORADORES
 async function carregarColaboradores() {
     try {
         const resposta = await fetch(API_URL);
@@ -32,6 +43,8 @@ async function carregarColaboradores() {
     }
 }
 
+
+// CADASTRO INDIVIDUAL
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -66,5 +79,61 @@ form.addEventListener('submit', async (event) => {
         console.error(erro);
     }
 });
+
+
+// IMPORTAÇÃO EM LOTE
+formImportacao.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const arquivo = arquivoCSV.files[0];
+
+    if (!arquivo) {
+        mensagemImportacao.textContent =
+            'Selecione um arquivo CSV.';
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('arquivo', arquivo);
+
+    mensagemImportacao.textContent =
+        'Importando colaboradores...';
+
+    resultadoImportacao.style.display = 'none';
+
+    try {
+
+        const resposta = await fetch(`${API_URL}/importar`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const dados = await resposta.json();
+
+        mensagemImportacao.textContent = dados.mensagem;
+
+        if (resposta.ok) {
+
+            totalImportacao.textContent = dados.total;
+            totalImportados.textContent = dados.importados;
+            totalIgnorados.textContent = dados.ignorados;
+
+            resultadoImportacao.style.display = 'block';
+
+            formImportacao.reset();
+
+            carregarColaboradores();
+        }
+
+    } catch (erro) {
+
+        mensagemImportacao.textContent =
+            'Erro ao importar colaboradores.';
+
+        console.error(erro);
+    }
+});
+
 
 carregarColaboradores();
