@@ -5,6 +5,7 @@ const connection = require('../database/connection');
 const multer = require('multer');
 const csv = require('csv-parser');
 const fs = require('fs');
+const iconv = require('iconv-lite');
 
 const upload = multer({
     dest: 'uploads/'
@@ -39,7 +40,7 @@ router.post('/', (req, res) => {
         tipo
     } = req.body;
 
-    if (!nome) {
+    if (!nome || !nome.trim()) {
         return res.status(400).json({
             mensagem: 'Nome do treinamento é obrigatório.'
         });
@@ -53,7 +54,12 @@ router.post('/', (req, res) => {
 
     connection.query(
         sql,
-        [nome, descricao, carga_horaria, tipo],
+        [
+            nome.trim(),
+            descricao || null,
+            carga_horaria || null,
+            tipo || null
+        ],
         (erro, resultado) => {
 
             if (erro) {
@@ -73,7 +79,7 @@ router.post('/', (req, res) => {
 });
 
 // IMPORTAR TREINAMENTOS POR CSV
-router.post('/importar', upload.single('arquivo'), (req, res) => {
+router.post('/importar', upload.single('arquivo'), async (req, res) => {
 
     if (!req.file) {
         return res.status(400).json({
@@ -81,80 +87,140 @@ router.post('/importar', upload.single('arquivo'), (req, res) => {
         });
     }
 
+    const caminhoArquivo = req.file.path;
     const treinamentos = [];
 
-    fs.createReadStream(req.file.path)
-        .pipe(csv({ separator: ';' }))
-        .on('data', (linha) => {
+    try {
 
-            treinamentos.push({
-                nome: linha.nome,
-                descricao: linha.descricao || null,
-                carga_horaria: linha.carga_horaria || null,
-                tipo: linha.tipo || null
+        // IDENTIFICAR A CODIFICAÇÃO DO ARQUIVO
+        const buffer = fs.readFileSync(caminhoArquivo);
+
+        let codificacao = 'utf8';
+
+        try {
+            const decoder = new TextDecoder('utf-8', {
+                fatal: true
             });
 
-        })
-        .on('end', async () => {
+            decoder.decode(buffer);
 
-            let importados = 0;
-            let ignorados = 0;
+        } catch (erro) {
+            codificacao = 'win1252';
+        }
 
-            for (const treinamento of treinamentos) {
+        console.log(
+            `Codificação identificada: ${codificacao}`
+        );
 
-                if (!treinamento.nome) {
-                    ignorados++;
-                    continue;
-                }
+        // LER O CSV COM A CODIFICAÇÃO CORRETA
+        const conteudoCSV = iconv.decode(buffer, codificacao);
 
-                const sql = `
-                    INSERT INTO treinamentos
-                    (nome, descricao, carga_horaria, tipo)
-                    VALUES (?, ?, ?, ?)
-                `;
+        // TRANSFORMAR O CSV EM REGISTROS
+        await new Promise((resolve, reject) => {
 
-                try {
+            const { Readable } = require('stream');
 
-                    await connection.promise().query(
-                        sql,
-                        [
-                            treinamento.nome,
-                            treinamento.descricao,
-                            treinamento.carga_horaria,
-                            treinamento.tipo
-                        ]
-                    );
+            Readable.from([conteudoCSV])
+                .pipe(csv({
+                    separator: ';',
+                    mapHeaders: ({ header }) =>
+                        header.replace(/^\uFEFF/, '').trim()
+                }))
+                .on('data', (linha) => {
 
-                    importados++;
+                    treinamentos.push({
+                        nome: linha.nome?.trim(),
+                        descricao: linha.descricao?.trim() || null,
+                        carga_horaria: linha.carga_horaria?.trim() || null,
+                        tipo: linha.tipo?.trim() || null
+                    });
 
-                } catch (erro) {
+                })
+                .on('end', resolve)
+                .on('error', reject);
+        });
 
-                    console.error(
-                        'Erro ao importar treinamento:',
-                        erro
-                    );
+        // VALIDAR O CABEÇALHO
+        if (
+            treinamentos.length > 0 &&
+            treinamentos.every(t => !t.nome)
+        ) {
+            return res.status(400).json({
+                mensagem:
+                    'Cabeçalho inválido. Utilize: nome;descricao;carga_horaria;tipo'
+            });
+        }
 
-                    ignorados++;
-                }
+        let importados = 0;
+        let ignorados = 0;
+
+        // INSERIR TREINAMENTOS NO MYSQL
+        for (const treinamento of treinamentos) {
+
+            if (!treinamento.nome) {
+                ignorados++;
+                continue;
             }
 
-            fs.unlink(req.file.path, () => {});
+            const sql = `
+                INSERT INTO treinamentos
+                (nome, descricao, carga_horaria, tipo)
+                VALUES (?, ?, ?, ?)
+            `;
 
-            res.json({
-                mensagem: 'Importação concluída.',
-                importados: importados,
-                ignorados: ignorados,
-                total: treinamentos.length
-            });
-        })
-        .on('error', (erro) => {
+            try {
 
-            console.error('Erro ao ler CSV:', erro);
+                await connection.promise().query(
+                    sql,
+                    [
+                        treinamento.nome,
+                        treinamento.descricao,
+                        treinamento.carga_horaria,
+                        treinamento.tipo
+                    ]
+                );
 
-            return res.status(500).json({
-                mensagem: 'Erro ao processar arquivo CSV.'
-            });
+                importados++;
+
+            } catch (erro) {
+
+                console.error(
+                    'Erro ao importar treinamento:',
+                    erro
+                );
+
+                ignorados++;
+            }
+        }
+
+        return res.json({
+            mensagem: 'Importação concluída.',
+            importados,
+            ignorados,
+            total: treinamentos.length,
+            codificacao
         });
+
+    } catch (erro) {
+
+        console.error('Erro ao processar CSV:', erro);
+
+        return res.status(500).json({
+            mensagem: 'Erro ao processar arquivo CSV.'
+        });
+
+    } finally {
+
+        // EXCLUIR O ARQUIVO TEMPORÁRIO
+        fs.unlink(caminhoArquivo, (erro) => {
+            if (erro) {
+                console.error(
+                    'Erro ao excluir arquivo temporário:',
+                    erro
+                );
+            }
+        });
+    }
 });
 
 module.exports = router;
