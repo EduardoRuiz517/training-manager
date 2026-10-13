@@ -24,7 +24,7 @@
         <a class="ativo" href="turmas.html">Turmas</a>
     </nav>
 
-    <!-- CADASTRO INDIVIDUAL -->
+    <!-- CADASTRO INDIVIDUAL DE TURMAS -->
 
     <h2>Cadastro de Turmas</h2>
 
@@ -41,21 +41,9 @@
             required
         >
 
-        <input
-            type="date"
-            id="data_inicio"
-            required
-        >
-
-        <input
-            type="date"
-            id="data_fim"
-        >
-
-        <input
-            type="time"
-            id="horario"
-        >
+        <input type="date" id="data_inicio" required>
+        <input type="date" id="data_fim">
+        <input type="time" id="horario">
 
         <input
             type="text"
@@ -78,15 +66,15 @@
 
     <p id="mensagem"></p>
 
-    <!-- IMPORTAÇÃO EM LOTE -->
+    <!-- IMPORTAÇÃO EM LOTE DE TURMAS -->
 
     <h2>Importação em Lote de Turmas</h2>
 
     <div class="importacao-box">
 
         <p>
-            Importe várias turmas de uma vez utilizando
-            um arquivo CSV separado por ponto e vírgula (;).
+            Importe várias turmas utilizando um arquivo CSV
+            separado por ponto e vírgula (;).
         </p>
 
         <p>
@@ -95,7 +83,7 @@
         </p>
 
         <p>
-            As datas devem estar no formato AAAA-MM-DD.
+            Datas aceitas: DD/MM/AAAA ou AAAA-MM-DD.
             O treinamento precisa estar cadastrado no sistema.
         </p>
 
@@ -179,9 +167,95 @@
         <tbody id="listaTurmas"></tbody>
     </table>
 
+    <!-- IMPORTAÇÃO EM LOTE DE MATRÍCULAS -->
+
+    <h2>Importação em Lote de Matrículas</h2>
+
+    <div class="importacao-box">
+
+        <p>
+            Importe colaboradores para suas respectivas turmas
+            utilizando um arquivo CSV.
+        </p>
+
+        <p>
+            <strong>Colunas obrigatórias:</strong>
+            matricula;turma_id
+        </p>
+
+        <p>
+            A matrícula do colaborador e o ID da turma
+            precisam estar cadastrados no sistema.
+        </p>
+
+        <form id="formImportacaoMatriculas">
+
+            <input
+                type="file"
+                id="arquivoMatriculas"
+                accept=".csv"
+                required
+            >
+
+            <button type="submit">
+                Importar Matrículas
+            </button>
+
+        </form>
+
+        <p id="mensagemImportacaoMatriculas"></p>
+
+        <div
+            id="resultadoImportacaoMatriculas"
+            style="display: none;"
+        >
+
+            <h3>Resultado da Importação</h3>
+
+            <p>
+                Total:
+                <strong id="totalMatriculas">0</strong>
+            </p>
+
+            <p>
+                Importados:
+                <strong id="matriculasImportadas">0</strong>
+            </p>
+
+            <p>
+                Ignorados:
+                <strong id="matriculasIgnoradas">0</strong>
+            </p>
+
+            <div id="areaErrosMatriculas" style="display: none;">
+
+                <h3>Registros Ignorados</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Linha CSV</th>
+                            <th>Matrícula</th>
+                            <th>Turma ID</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="listaErrosMatriculas"></tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <!-- GERENCIAMENTO DE PARTICIPANTES -->
 
-    <div id="areaParticipantes" style="display: none; margin-top: 40px;">
+    <div
+        id="areaParticipantes"
+        style="display: none; margin-top: 40px;"
+    >
 
         <h2 id="tituloParticipantes">
             Participantes da Turma

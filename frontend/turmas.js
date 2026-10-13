@@ -4,11 +4,13 @@ const API_TREINAMENTOS = 'http://localhost:3000/treinamentos';
 const API_COLABORADORES = 'http://localhost:3000/colaboradores';
 const API_MATRICULAS = 'http://localhost:3000/matriculas';
 
+// ELEMENTOS DO CADASTRO DE TURMAS
 const formTurma = document.getElementById('formTurma');
 const mensagem = document.getElementById('mensagem');
 const listaTurmas = document.getElementById('listaTurmas');
 const selectTreinamento = document.getElementById('treinamento_id');
 
+// ELEMENTOS DA IMPORTAÇÃO DE TURMAS
 const formImportacao = document.getElementById('formImportacao');
 const arquivoCSV = document.getElementById('arquivoCSV');
 const mensagemImportacao = document.getElementById('mensagemImportacao');
@@ -19,12 +21,30 @@ const totalIgnorados = document.getElementById('totalIgnorados');
 const areaErrosImportacao = document.getElementById('areaErrosImportacao');
 const listaErrosImportacao = document.getElementById('listaErrosImportacao');
 
+// ELEMENTOS DO GERENCIAMENTO DE PARTICIPANTES
 const areaParticipantes = document.getElementById('areaParticipantes');
 const tituloParticipantes = document.getElementById('tituloParticipantes');
 const formMatricula = document.getElementById('formMatricula');
 const selectColaborador = document.getElementById('colaborador_id');
 const mensagemMatricula = document.getElementById('mensagemMatricula');
 const listaParticipantes = document.getElementById('listaParticipantes');
+
+// ELEMENTOS DA IMPORTAÇÃO DE MATRÍCULAS
+const formImportacaoMatriculas = document.getElementById(
+    'formImportacaoMatriculas'
+);
+const arquivoMatriculas = document.getElementById('arquivoMatriculas');
+const mensagemImportacaoMatriculas = document.getElementById(
+    'mensagemImportacaoMatriculas'
+);
+const resultadoImportacaoMatriculas = document.getElementById(
+    'resultadoImportacaoMatriculas'
+);
+const totalMatriculas = document.getElementById('totalMatriculas');
+const matriculasImportadas = document.getElementById('matriculasImportadas');
+const matriculasIgnoradas = document.getElementById('matriculasIgnoradas');
+const areaErrosMatriculas = document.getElementById('areaErrosMatriculas');
+const listaErrosMatriculas = document.getElementById('listaErrosMatriculas');
 
 let turmaSelecionadaId = null;
 
@@ -140,7 +160,7 @@ async function carregarTurmas() {
     }
 }
 
-// CADASTRAR TURMA
+// CADASTRAR TURMA INDIVIDUAL
 formTurma.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -173,7 +193,7 @@ formTurma.addEventListener('submit', async (event) => {
     }
 });
 
-// IMPORTAÇÃO EM LOTE
+// IMPORTAÇÃO EM LOTE DE TURMAS
 formImportacao.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -208,7 +228,6 @@ formImportacao.addEventListener('submit', async (event) => {
         );
 
         mensagemImportacao.textContent = dados.mensagem;
-
         totalImportacao.textContent = dados.total;
         totalImportados.textContent = dados.importados;
         totalIgnorados.textContent = dados.ignorados;
@@ -242,7 +261,7 @@ formImportacao.addEventListener('submit', async (event) => {
 
     } catch (erro) {
         mensagemImportacao.textContent = erro.message;
-        console.error('Erro na importação:', erro);
+        console.error('Erro na importação de turmas:', erro);
 
     } finally {
         botao.disabled = false;
@@ -254,7 +273,6 @@ async function gerenciarTurma(id, nome) {
     turmaSelecionadaId = id;
 
     areaParticipantes.style.display = 'block';
-
     tituloParticipantes.textContent =
         `Participantes da Turma - ${nome}`;
 
@@ -313,7 +331,7 @@ async function carregarParticipantes() {
     }
 }
 
-// MATRICULAR COLABORADOR
+// MATRICULAR COLABORADOR INDIVIDUALMENTE
 formMatricula.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -348,7 +366,100 @@ formMatricula.addEventListener('submit', async (event) => {
     }
 });
 
-// INICIALIZAR
+// IMPORTAÇÃO EM LOTE DE MATRÍCULAS
+formImportacaoMatriculas.addEventListener(
+    'submit',
+    async (event) => {
+        event.preventDefault();
+
+        const arquivo = arquivoMatriculas.files[0];
+
+        if (!arquivo) {
+            mensagemImportacaoMatriculas.textContent =
+                'Selecione um arquivo CSV.';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('arquivo', arquivo);
+
+        const botao = formImportacaoMatriculas.querySelector(
+            'button[type="submit"]'
+        );
+
+        mensagemImportacaoMatriculas.textContent =
+            'Importando matrículas...';
+
+        resultadoImportacaoMatriculas.style.display = 'none';
+        areaErrosMatriculas.style.display = 'none';
+        listaErrosMatriculas.innerHTML = '';
+
+        botao.disabled = true;
+
+        try {
+            const dados = await consultarAPI(
+                `${API_MATRICULAS}/importar`,
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            );
+
+            mensagemImportacaoMatriculas.textContent =
+                dados.mensagem;
+
+            totalMatriculas.textContent = dados.total;
+            matriculasImportadas.textContent = dados.importados;
+            matriculasIgnoradas.textContent = dados.ignorados;
+
+            resultadoImportacaoMatriculas.style.display = 'block';
+
+            const detalhes = dados.detalhes || [];
+
+            if (detalhes.length > 0) {
+                areaErrosMatriculas.style.display = 'block';
+
+                detalhes.forEach(detalhe => {
+                    const linha = document.createElement('tr');
+
+                    [
+                        detalhe.linha ?? '',
+                        detalhe.matricula || '',
+                        detalhe.turma_id || '',
+                        detalhe.motivo || ''
+                    ].forEach(valor => {
+                        const celula = document.createElement('td');
+                        celula.textContent = valor;
+                        linha.appendChild(celula);
+                    });
+
+                    listaErrosMatriculas.appendChild(linha);
+                });
+            }
+
+            formImportacaoMatriculas.reset();
+
+            // ATUALIZAR PARTICIPANTES SE HOUVER TURMA ABERTA
+            if (turmaSelecionadaId) {
+                await carregarParticipantes();
+            }
+
+        } catch (erro) {
+            mensagemImportacaoMatriculas.textContent =
+                erro.message;
+
+            console.error(
+                'Erro ao importar matrículas:',
+                erro
+            );
+
+        } finally {
+            botao.disabled = false;
+        }
+    }
+);
+
+// INICIALIZAÇÃO
 carregarTreinamentos();
 carregarColaboradores();
 carregarTurmas();
