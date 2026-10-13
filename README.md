@@ -64,3 +64,30 @@ Nas próximas sprints serão adicionadas novas funcionalidades ao sistema, inclu
 Software Product: Analysis, Specification, Project & Implementation
 
 Turma: 202602 - EAD - ADS 5A
+## Entrega AC2 – Training Manager LMS
+
+O Training Manager LMS é um sistema de gestão de treinamentos corporativos desenvolvido com HTML, CSS, JavaScript, Node.js, Express e MySQL.
+
+### Funcionalidades implementadas
+- Cadastro e listagem de colaboradores.
+- Cadastro e listagem de treinamentos.
+- Cadastro e gerenciamento de turmas.
+- Matrícula individual de colaboradores.
+- Visualização de participantes por turma.
+- Importação em lote de colaboradores por CSV.
+- Importação em lote de treinamentos por CSV.
+- Importação em lote de turmas por CSV.
+- Importação em lote de matrículas por CSV.
+- Validação de registros duplicados e inconsistências.
+- Relatórios de resultados das importações.
+
+### Links da entrega
+
+**Código-fonte:** https://github.com/EduardoRuiz517/training-manager/tree/desenvolvimento-ac2
+
+**Board do projeto:** [Inserir link do Board]
+
+**Vídeo de demonstração da AC2:** [Inserir link do vídeo]
+
+### Tecnologias
+HTML5, CSS3, JavaScript, Node.js, Express.js, MySQL, Git e GitHub.
