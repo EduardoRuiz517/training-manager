@@ -85,9 +85,5 @@ O Training Manager LMS é um sistema de gestão de treinamentos corporativos des
 
 **Código-fonte:** https://github.com/EduardoRuiz517/training-manager/tree/desenvolvimento-ac2
 
-**Board do projeto:** [Inserir link do Board]
-
-**Vídeo de demonstração da AC2:** [Inserir link do vídeo]
-
 ### Tecnologias
 HTML5, CSS3, JavaScript, Node.js, Express.js, MySQL, Git e GitHub.
