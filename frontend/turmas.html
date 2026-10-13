@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,6 +7,7 @@
     <title>Turmas - Training Manager LMS</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div class="container">
@@ -21,6 +23,8 @@
         <a href="treinamentos.html">Treinamentos</a>
         <a class="ativo" href="turmas.html">Turmas</a>
     </nav>
+
+    <!-- CADASTRO INDIVIDUAL -->
 
     <h2>Cadastro de Turmas</h2>
 
@@ -62,7 +66,7 @@
         <input
             type="number"
             id="vagas"
-            placeholder="Quantidade de vagas"
+            placeholder="Quantidade de vagas (opcional)"
             min="1"
         >
 
@@ -73,6 +77,87 @@
     </form>
 
     <p id="mensagem"></p>
+
+    <!-- IMPORTAÇÃO EM LOTE -->
+
+    <h2>Importação em Lote de Turmas</h2>
+
+    <div class="importacao-box">
+
+        <p>
+            Importe várias turmas de uma vez utilizando
+            um arquivo CSV separado por ponto e vírgula (;).
+        </p>
+
+        <p>
+            <strong>Colunas esperadas:</strong>
+            treinamento;nome;data_inicio;data_fim;horario;local;vagas
+        </p>
+
+        <p>
+            As datas devem estar no formato AAAA-MM-DD.
+            O treinamento precisa estar cadastrado no sistema.
+        </p>
+
+        <form id="formImportacao">
+
+            <input
+                type="file"
+                id="arquivoCSV"
+                accept=".csv"
+                required
+            >
+
+            <button type="submit">
+                Importar Turmas
+            </button>
+
+        </form>
+
+        <p id="mensagemImportacao"></p>
+
+        <div id="resultadoImportacao" style="display: none;">
+
+            <h3>Resultado da Importação</h3>
+
+            <p>
+                Total:
+                <strong id="totalImportacao">0</strong>
+            </p>
+
+            <p>
+                Importados:
+                <strong id="totalImportados">0</strong>
+            </p>
+
+            <p>
+                Ignorados:
+                <strong id="totalIgnorados">0</strong>
+            </p>
+
+            <div id="areaErrosImportacao" style="display: none;">
+
+                <h3>Registros Ignorados</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Linha do CSV</th>
+                            <th>Treinamento</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="listaErrosImportacao"></tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TURMAS CADASTRADAS -->
 
     <h2>Turmas Cadastradas</h2>
 
@@ -93,6 +178,8 @@
 
         <tbody id="listaTurmas"></tbody>
     </table>
+
+    <!-- GERENCIAMENTO DE PARTICIPANTES -->
 
     <div id="areaParticipantes" style="display: none; margin-top: 40px;">
 
