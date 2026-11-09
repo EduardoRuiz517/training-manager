@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Training Manager LMS</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 25px 0;
+        }
+
+        .dashboard-card {
+            background: #f5f7fb;
+            border: 1px solid #dfe5ee;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dashboard-card h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-card .valor {
+            font-size: 30px;
+            font-weight: bold;
+            color: #164b83;
+        }
+
+        .grafico-container {
+            margin: 25px 0;
+            padding: 20px;
+            border: 1px solid #dfe5ee;
+            border-radius: 10px;
+        }
+
+        .grafico-linha {
+            display: grid;
+            grid-template-columns: 110px 1fr 50px;
+            align-items: center;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .grafico-barra-fundo {
+            height: 24px;
+            background: #edf0f5;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .grafico-barra {
+            height: 100%;
+            width: 0;
+            border-radius: 6px;
+            transition: width 0.3s;
+        }
+
+        .barra-concluidos {
+            background: #259c68;
+        }
+
+        .barra-matriculados {
+            background: #397bd5;
+        }
+
+        .barra-ausentes {
+            background: #dc5b58;
+        }
+
+        .tabela-dashboard {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabela-dashboard th,
+        .tabela-dashboard td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .tabela-dashboard th {
+            background: #edf2f8;
+            color: #222;
+        }
+
+        .tabela-scroll {
+            overflow-x: auto;
+        }
+
+        .dashboard-acoes {
+            margin: 16px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Training Manager LMS</h1>
+
+    <p class="subtitulo">
+        Sistema de Gestão de Aprendizagem Corporativa
+    </p>
+
+    <nav class="menu">
+        <a href="index.html">Colaboradores</a>
+        <a href="treinamentos.html">Treinamentos</a>
+        <a href="turmas.html">Turmas</a>
+        <a class="ativo" href="dashboard.html">Dashboard</a>
+    </nav>
+
+    <h2>Dashboard de Treinamentos</h2>
+
+    <p>
+        Acompanhamento de matrículas, conclusões e ausências.
+    </p>
+
+    <div class="dashboard-acoes">
+        <button type="button" id="atualizarDashboard">
+            Atualizar Indicadores
+        </button>
+    </div>
+
+    <p id="mensagemDashboard"></p>
+
+    <!-- INDICADORES GERAIS -->
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h3>Total de Matrículas</h3>
+            <div class="valor" id="totalMatriculas">0</div>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Concluídos</h3>
+            <div class="valor" id="totalConcluidos">0</div>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Ausentes</h3>
+            <div class="valor" id="totalAusentes">0</div>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Taxa de Conclusão</h3>
+            <div class="valor" id="taxaConclusao">0%</div>
+        </div>
+
+    </div>
+
+    <!-- GRÁFICO DE STATUS -->
+
+    <div class="grafico-container">
+
+        <h2>Distribuição das Matrículas</h2>
+
+        <div class="grafico-linha">
+            <span>Concluídos</span>
+
+            <div class="grafico-barra-fundo">
+                <div
+                    class="grafico-barra barra-concluidos"
+                    id="barraConcluidos">
+                </div>
+            </div>
+
+            <strong id="valorConcluidos">0</strong>
+        </div>
+
+        <div class="grafico-linha">
+            <span>Matriculados</span>
+
+            <div class="grafico-barra-fundo">
+                <div
+                    class="grafico-barra barra-matriculados"
+                    id="barraMatriculados">
+                </div>
+            </div>
+
+            <strong id="valorMatriculados">0</strong>
+        </div>
+
+        <div class="grafico-linha">
+            <span>Ausentes</span>
+
+            <div class="grafico-barra-fundo">
+                <div
+                    class="grafico-barra barra-ausentes"
+                    id="barraAusentes">
+                </div>
+            </div>
+
+            <strong id="valorAusentes">0</strong>
+        </div>
+
+    </div>
+
+    <!-- RESULTADOS POR TREINAMENTO -->
+
+    <h2>Indicadores por Treinamento</h2>
+
+    <div class="tabela-scroll">
+        <table class="tabela-dashboard">
+            <thead>
+                <tr>
+                    <th>Treinamento</th>
+                    <th>Matrículas</th>
+                    <th>Concluídos</th>
+                    <th>Ausentes</th>
+                    <th>Matriculados</th>
+                    <th>Conclusão (%)</th>
+                </tr>
+            </thead>
+
+            <tbody id="listaIndicadoresTreinamentos"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
