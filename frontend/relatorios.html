@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Relatórios - Training Manager LMS</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .filtros-relatorio {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .campo-filtro {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .campo-filtro input,
+        .campo-filtro select {
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .acoes-relatorio {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tabela-container {
+            overflow-x: auto;
+        }
+
+        .tabela-relatorio {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .tabela-relatorio th,
+        .tabela-relatorio td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .tabela-relatorio th {
+            background: #edf2f8;
+        }
+
+        .resumo-relatorio {
+            margin: 15px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Training Manager LMS</h1>
+
+    <nav class="menu">
+        <a href="index.html">Colaboradores</a>
+        <a href="treinamentos.html">Treinamentos</a>
+        <a href="turmas.html">Turmas</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="relatorios.html">Relatórios</a>
+    </nav>
+
+    <h2>Relatórios de Treinamentos</h2>
+
+    <p>
+        Consulte e exporte os registros de matrículas.
+    </p>
+
+    <div class="filtros-relatorio">
+
+        <div class="campo-filtro">
+            <label for="filtroTreinamento">Treinamento</label>
+            <select id="filtroTreinamento">
+                <option value="">Todos</option>
+            </select>
+        </div>
+
+        <div class="campo-filtro">
+            <label for="filtroTurma">Turma</label>
+            <select id="filtroTurma">
+                <option value="">Todas</option>
+            </select>
+        </div>
+
+        <div class="campo-filtro">
+            <label for="filtroStatus">Status</label>
+            <select id="filtroStatus">
+                <option value="">Todos</option>
+                <option value="Matriculado">Matriculado</option>
+                <option value="Concluído">Concluído</option>
+                <option value="Ausente">Ausente</option>
+            </select>
+        </div>
+
+        <div class="campo-filtro">
+            <label for="filtroDataInicio">
+                Data inicial da turma
+            </label>
+            <input type="date" id="filtroDataInicio">
+        </div>
+
+        <div class="campo-filtro">
+            <label for="filtroDataFim">
+                Data final do período
+            </label>
+            <input type="date" id="filtroDataFim">
+        </div>
+
+    </div>
+
+    <div class="acoes-relatorio">
+        <button id="btnConsultar" type="button">
+            Consultar
+        </button>
+
+        <button id="btnExportar" type="button">
+            Exportar CSV
+        </button>
+
+        <button id="btnLimpar" type="button">
+            Limpar filtros
+        </button>
+    </div>
+
+    <p id="mensagemRelatorio"></p>
+
+    <div class="resumo-relatorio">
+        Registros encontrados:
+        <span id="totalRegistros">0</span>
+    </div>
+
+    <div class="tabela-container">
+        <table class="tabela-relatorio">
+            <thead>
+                <tr>
+                    <th>Matrícula</th>
+                    <th>Colaborador</th>
+                    <th>Cargo</th>
+                    <th>Loja</th>
+                    <th>Treinamento</th>
+                    <th>Turma</th>
+                    <th>Carga horária</th>
+                    <th>Início da turma</th>
+                    <th>Status</th>
+                    <th>Conclusão</th>
+                </tr>
+            </thead>
+
+            <tbody id="corpoRelatorio"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="relatorios.js"></script>
+</body>
+</html>

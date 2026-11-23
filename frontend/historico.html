@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico do Colaborador - Training Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f9;
+            color: #263238;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav {
+            background: #24476f;
+            padding: 12px 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .painel {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px #00000012;
+        }
+
+        .pesquisa {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            padding: 12px;
+            min-width: 240px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #17365d;
+            color: white;
+            cursor: pointer;
+        }
+
+        .indicadores {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit, minmax(170px, 1fr)
+            );
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .indicador {
+            background: #edf3fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .indicador strong {
+            display: block;
+            font-size: 28px;
+            margin-top: 10px;
+        }
+
+        .tabela-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #edf3fa;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Training Manager</h1>
+    <p>Histórico de Treinamentos do Colaborador</p>
+</header>
+
+<nav>
+    <a href="index.html">Colaboradores</a>
+    <a href="treinamentos.html">Treinamentos</a>
+    <a href="turmas.html">Turmas</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="relatorios.html">Relatórios</a>
+    <a href="historico.html">Histórico</a>
+</nav>
+
+<main>
+
+    <section class="painel">
+        <h2>Pesquisar colaborador</h2>
+
+        <div class="pesquisa">
+            <input
+                type="text"
+                id="matriculaPesquisa"
+                placeholder="Digite a matrícula"
+            >
+
+            <button id="btnPesquisar">
+                Pesquisar
+            </button>
+        </div>
+
+        <p id="mensagemHistorico"></p>
+    </section>
+
+    <div id="resultadoHistorico" hidden>
+
+        <section class="painel">
+            <h2 id="nomeColaborador"></h2>
+
+            <p>
+                <strong>Matrícula:</strong>
+                <span id="matriculaColaborador"></span>
+            </p>
+
+            <p>
+                <strong>Cargo:</strong>
+                <span id="cargoColaborador"></span>
+            </p>
+
+            <p>
+                <strong>Loja:</strong>
+                <span id="lojaColaborador"></span>
+            </p>
+        </section>
+
+        <section class="indicadores">
+
+            <div class="indicador">
+                Total de matrículas
+                <strong id="totalMatriculas">0</strong>
+            </div>
+
+            <div class="indicador">
+                Concluídos
+                <strong id="totalConcluidos">0</strong>
+            </div>
+
+            <div class="indicador">
+                Ausentes
+                <strong id="totalAusentes">0</strong>
+            </div>
+
+            <div class="indicador">
+                Horas concluídas
+                <strong id="horasConcluidas">0 h</strong>
+            </div>
+
+            <div class="indicador">
+                Taxa de conclusão
+                <strong id="taxaConclusao">0%</strong>
+            </div>
+
+        </section>
+
+        <section class="painel">
+            <h2>Histórico de treinamentos</h2>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Treinamento</th>
+                            <th>Turma</th>
+                            <th>Carga horária</th>
+                            <th>Início</th>
+                            <th>Fim</th>
+                            <th>Status</th>
+                            <th>Conclusão</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelaHistorico"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+
+<script src="historico.js"></script>
+
+</body>
+</html>
